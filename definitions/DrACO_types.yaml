@@ -1,0 +1,143 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+description: SeaClouds normative node types
+imports: 
+	- tosca-normative-types:1.0
+node_types:
+	draco.nodes.Compute:
+		derived_from: tosca.nodes.Compute
+		properties:
+			availability:
+				type: number
+			city:
+				type: string
+			cost:
+				type: string
+			country:
+				type: string
+			disk_type:
+				type: string
+				constraints:
+					- valid values: ['sata', 'sas', 'ssd', 'scsi', 'pcie']
+			disk_size:
+				type: number
+			hardwareId:
+				type: string
+			location:
+				type: string
+			num_cpus:
+				type: number
+			num_disks:
+				type: number
+			performance:
+				type: number
+			region:
+				type: string
+			resource_type:
+				type: string
+				default: compute
+			ram:
+				type: number
+
+	draco.nodes.Platform:
+		derived_from: tosca.nodes.Root
+		properties:
+			api_restricted:
+				type: boolean
+			auto_failover:
+				type: boolean
+			auto_scaling:
+				type: boolean
+			availability:
+				type: number
+			country:
+				type: string
+			city:
+				type: string
+			go_support:
+				type: boolean
+			go_version:
+				type: list
+			horizontal_scaling:
+				type: boolean
+			java_support:
+				type: boolean
+			java_version:
+				type: list
+        	memcached_support:
+				type: boolean
+			memcached_version:
+				type: list
+			mysql_supported: 
+				type: boolean
+			mysql_version:
+				type: list
+			mongodb_supported: 
+				type: boolean
+			mongodb_version:
+				type: list
+			node_supported: 
+				type: boolean
+			node_version:
+				type: list
+			php_supported: 
+				type: boolean
+			php_version:
+				type: list
+			postgresql_supported: 
+				type: boolean
+			postgresql_version:
+				type: string
+            private_hosting:
+				type: boolean
+			process_pricing:
+				type: list
+			python_supported: 
+				type: boolean
+			python_version:
+				type: list
+            public_hosting:
+				type: boolean
+			redis_supported: 
+				type: boolean
+			redis_version:
+				type: list
+			ruby_supported: 
+				type: boolean
+			ruby_version:
+				type: list
+			vertical_scaling:
+				type: boolean
+			self_hostable:
+				type: boolean
+			tomcat_supported: 
+				type: boolean
+			tomcat_version:
+				type: list
+			scala_supported: 
+				type: boolean
+			scala_version:
+				type: list
+			resin_supported: 
+				type: boolean
+			resin_version:
+				type: list
+			jetty_supported: 
+				type: boolean
+			jetty_version:
+				type: list
+			jboss_supported: 
+				type: boolean
+			jboss_version:
+				type: list
+			glassfish_supported: 
+				type: boolean
+			glassfish_version:
+				type: list
+			couchbase_supported: 
+				type: boolean
+			couchbase_version:
+				type: list
+			vertical_scaling:
+				type: boolean
+			vm_based:
+				type: boolean

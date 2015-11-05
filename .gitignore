@@ -1,0 +1,16 @@
+.idea/
+*.iml
+target/
+.classpath
+.project
+.metadata
+.settings/
+/bin/
+*.zip
+**/*.log
+.java-version
+.vagrant
+**/nohup.out
+release.properties
+pom.xml.*
+.DS_Store

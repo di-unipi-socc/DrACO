@@ -15,9 +15,9 @@
  *    limitations under the License.
  */
 
-package eu.draco.platform.discoverer.Crawler;
+package eu.seaclouds.platform.discoverer.crawler;
 
-import eu.draco.platform.discoverer.core.Offering;
+import eu.seaclouds.platform.discoverer.core.Offering;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -265,8 +265,9 @@ public class CloudHarmonyCrawler extends SCCrawler {
         String name = Offering.sanitizeName(providerName + "_" + instanceId + "_" + locationCode);
 
         Offering offering = new Offering(name);
-        offering.setType("draco.Nodes.Compute");
+        offering.setType("seaclouds.nodes.Compute." + Offering.sanitizeName(providerName));
 
+        offering.addProperty("resource_type", "compute");
         offering.addProperty("hardwareId", instanceId);
         offering.addProperty("location", chs.serviceId);
         offering.addProperty("region", locationCode);
@@ -327,7 +328,10 @@ public class CloudHarmonyCrawler extends SCCrawler {
 
         Offering offering = new Offering(name);
 
-        offering.setType("draco.Nodes.Platform");
+        offering.setType("seaclouds.nodes.Platform." + Offering.sanitizeName(chs.name));
+
+        /* resource type  */
+        offering.addProperty("resource_type", "platform");
 
         /* sla */
         if(chs.sla != null) {

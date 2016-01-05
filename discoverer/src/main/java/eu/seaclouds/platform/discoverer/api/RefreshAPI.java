@@ -15,8 +15,29 @@
  *    limitations under the License.
  */
 
-package eu.draco.platform.discoverer.API;
+package eu.seaclouds.platform.discoverer.api;
+
+import eu.seaclouds.platform.discoverer.core.Discoverer;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 
-public interface IAPI {
+@Path("/refresh")
+@Produces(MediaType.APPLICATION_JSON)
+public class RefreshAPI {
+    /* vars */
+    private Discoverer discoverer;
+
+    public RefreshAPI() {
+        this.discoverer = Discoverer.instance();
+    }
+
+    @GET
+    public Boolean refreshRepository() {
+        this.discoverer.refreshRepository();
+        return true;
+    }
 }

@@ -15,9 +15,9 @@
  *    limitations under the License.
  */
 
-package eu.draco.platform.discoverer.Crawler;
+package eu.seaclouds.platform.discoverer.crawler;
 
-import eu.draco.platform.discoverer.core.Offering;
+import eu.seaclouds.platform.discoverer.core.Offering;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.json.simple.JSONArray;
@@ -154,9 +154,9 @@ public class PaasifyCrawler extends SCCrawler {
         Offering offering = null;
 
         if (infrastructures == null || infrastructures.size() == 0) {
-            String offeringName = Offering.sanitizeName(name);
+            String providerName = Offering.sanitizeName(name);
+            offering = this.parseOffering(providerName, providerName, obj);
 
-            offering = this.parseOffering(offeringName, obj);
         } else {
             for (Object element: infrastructures) {
                 JSONObject infrastructure = (JSONObject) element;
@@ -178,9 +178,10 @@ public class PaasifyCrawler extends SCCrawler {
                         fullName = fullName + "." + country;
                 }
 
+                String providerName = Offering.sanitizeName(name);
                 String offeringName = Offering.sanitizeName(fullName);
 
-                offering = this.parseOffering(offeringName, obj);
+                offering = this.parseOffering(providerName, offeringName, obj);
 
                 if (!continent.isEmpty())
                     offering.addProperty("continent", continent);
@@ -194,10 +195,11 @@ public class PaasifyCrawler extends SCCrawler {
     }
 
 
-    private Offering parseOffering(String name, JSONObject obj) {
+    private Offering parseOffering(String providerName, String name, JSONObject obj) {
         Offering offering = new Offering(name);
 
-        offering.setType("draco.Nodes.Platform");
+        offering.setType("seaclouds.nodes.Platform." + providerName);
+        offering.addProperty("resource_type", "platform");
 
         parseRuntimesAndMiddlewares(obj, offering);
         parseScaling(obj, offering);
@@ -328,19 +330,15 @@ public class PaasifyCrawler extends SCCrawler {
         JSONArray versions = (JSONArray) service.get("versions");
 
         if (versions != null && versions.size() > 0) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("[");
+            String version = (String) versions.get(versions.size() - 1);
 
-            for (int i = 0; i < versions.size(); i++) {
-                if (i > 0) sb.append(",");
+            if (version.indexOf('*') == -1) {
+                if (name.equals("java")) { // per java la versione da prendere non è 1.x, ma 6,7,8..
+                    version = version.substring(2);
+                }
 
-                String version = (String) versions.get(i);
-                sb.append("\"" + version + "\"");
-
+                offering.addProperty(name + "_version", version);
             }
-
-            sb.append("]");
-            offering.addProperty(name + "_version", sb.toString());
         }
     }
 

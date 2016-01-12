@@ -72,14 +72,13 @@ public class OfferingManager {
     }
 
     /**
-     * Add a new offering in the repository (by creating the the YAML file
-     * containing the TOSCA and the JSON file containing meta information)
+     * Add a new offering in the repository
      *
      * @param offering the Offering to add
      * @return the id of the added Offering
      */
     public String addOffering(Offering offering) {
-        this.removeOffering(offering.getId());
+        // TODO: find a way to generate a unique ID (not used yet)
         this.offeringsCollection.insertOne(offering.toDBObject());
         this.offeringNameToOfferingId.put(offering.getName(), offering.getId());
         return offering.getId();

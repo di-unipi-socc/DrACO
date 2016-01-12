@@ -171,6 +171,7 @@ public class Discoverer extends Application<DiscovererConfiguration> {
         environment.jersey().register(new DeleteAPI());         /* /delete */
         environment.jersey().register(new StatisticsAPI());     /* /statistics */
         environment.jersey().register(new RefreshAPI());        /* /refresh */
+        environment.jersey().register(new FetchIfAPI());
     }
 
     public static void main(String[] args) throws Exception {

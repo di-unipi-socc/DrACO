@@ -18,7 +18,6 @@
 package eu.seaclouds.platform.discoverer.core;
 
 import org.bson.Document;
-import org.bson.codecs.IntegerCodec;
 
 import java.util.Calendar;
 import java.util.Date;

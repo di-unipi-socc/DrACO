@@ -1,14 +1,11 @@
 package eu.seaclouds.platform.discoverer.service;
 
 import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import eu.seaclouds.platform.discoverer.api.*;
 import eu.seaclouds.platform.discoverer.core.Discoverer;
 import eu.seaclouds.platform.discoverer.core.DiscovererConfiguration;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
-import org.bson.Document;
 
 public class DiscovererApplication extends Application<DiscovererConfiguration> {
 

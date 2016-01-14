@@ -22,14 +22,8 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class OfferingManager {
 

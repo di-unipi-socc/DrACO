@@ -34,8 +34,8 @@ public class FetchAllAPI {
     /* vars */
     private Discoverer discoverer;
 
-    public FetchAllAPI() {
-        this.discoverer = Discoverer.instance();
+    public FetchAllAPI(Discoverer discoverer) {
+        this.discoverer = discoverer;
     }
 
     @GET

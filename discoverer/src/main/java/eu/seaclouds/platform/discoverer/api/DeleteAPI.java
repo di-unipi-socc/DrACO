@@ -36,8 +36,8 @@ public class DeleteAPI {
     /* vars */
     private Discoverer discoverer;
 
-    public DeleteAPI() {
-        this.discoverer = Discoverer.instance();
+    public DeleteAPI(Discoverer discoverer) {
+        this.discoverer = discoverer;
     }
 
     @POST

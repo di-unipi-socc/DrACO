@@ -27,7 +27,6 @@ import java.util.HashMap;
 public class Offering {
     Date lastCrawl;
     String offeringName;
-    String offeringId = null;
     public String toscaString = null;
 
     private String type;
@@ -39,9 +38,8 @@ public class Offering {
         this.lastCrawl = Calendar.getInstance().getTime();
     }
 
-    private Offering (String offeringName, String offeringId, Date lastCrawl) {
+    private Offering (String offeringName, Date lastCrawl) {
         this(offeringName);
-        this.offeringId = offeringId;
         this.lastCrawl = lastCrawl;
     }
 
@@ -75,34 +73,10 @@ public class Offering {
      */
     public static boolean validateOfferingId(String cloudOfferingId) {
         /* input checks */
-        if(cloudOfferingId == null)
-            return false;
-        if( cloudOfferingId.trim().length() != cloudOfferingId.length() )
-            return false;
-        if( cloudOfferingId.length() == 0 )
+        if(cloudOfferingId == null || cloudOfferingId.length() == 0)
             return false;
 
-        /* input check: we do NOT allow dots, slashes and backslashes */
-        int n = cloudOfferingId.length();
-        for(int i=0; i<n; i++) {
-            char ch = cloudOfferingId.charAt(i);
-            if( ch == '.' || ch == '/' || ch == '\\' )
-                return false;
-        }
-
-        /* all good */
         return true;
-    }
-
-    /**
-     * Gets the ID of the Offering.
-     * @return The ID of the Offering.
-     */
-    public String getId() {
-        if(this.offeringId == null)
-            throw new NullPointerException("The offering has not been assigned any ID. "
-                    + "See Offering.setId(String).");
-        return this.offeringId;
     }
 
     /**
@@ -114,6 +88,10 @@ public class Offering {
     }
 
     public String toTosca() {
+        if (this.toscaString == null) {
+            this.toscaString = getPreamble() + this.getNodeTemplate();
+        }
+
         return this.toscaString;
     }
 
@@ -192,13 +170,12 @@ public class Offering {
         if (dbOjb == null)
             return null;
 
-        String offeringId = (String) dbOjb.get("offering_id");
         String offeringName = (String) dbOjb.get("offering_name");
         String type = (String) dbOjb.get("type");
 
         String lastCrawlMilliseconds = (String) dbOjb.get("last_crawl");
         Date lastCrawl = new Date(Long.parseLong(lastCrawlMilliseconds));
-        Offering offering = new Offering(offeringName, offeringId, lastCrawl);
+        Offering offering = new Offering(offeringName, lastCrawl);
         offering.setType(type);
 
         offering.toscaString = (String) dbOjb.get("tosca_string");
@@ -208,11 +185,10 @@ public class Offering {
     public Document toDBObject() {
         Document document = new Document();
 
-        document.put("offering_id", this.offeringId);
         document.put("offering_name", this.offeringName);
         document.put("type", this.type);
-        document.put("last_crawl", this.lastCrawl.getTime());
-        document.put("tosca_string", this.toscaString);
+        document.put("last_crawl", Long.toString(this.lastCrawl.getTime()));
+        document.put("tosca_string", this.toTosca());
 
         return document;
     }

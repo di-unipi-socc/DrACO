@@ -62,6 +62,26 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>com.github.fakemongo</groupId>
+      <artifactId>fongo</artifactId>
+      <version>2.0.4</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>rhino</artifactId>
+          <groupId>org.mozilla</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jts</artifactId>
+          <groupId>com.vividsolutions</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>geojson-jackson</artifactId>
+          <groupId>de.grundid.opendatalab</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
 </project>
 

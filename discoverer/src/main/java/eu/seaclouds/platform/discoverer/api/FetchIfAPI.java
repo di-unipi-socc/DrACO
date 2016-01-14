@@ -40,8 +40,8 @@ public class FetchIfAPI {
     private Discoverer discoverer;
     private JSONParser JSONParser;
 
-    public FetchIfAPI() {
-        this.discoverer = Discoverer.instance();
+    public FetchIfAPI(Discoverer discoverer) {
+        this.discoverer = discoverer;
         this.JSONParser = new JSONParser();
     }
 
@@ -101,7 +101,7 @@ public class FetchIfAPI {
         return toscaString.substring(i).startsWith(constraintValue);
     }
 
-    private class FetchIfRepresentation {
+    public class FetchIfRepresentation {
 
         private ArrayList<String> offeringIds;
         private ArrayList<String> offerings;

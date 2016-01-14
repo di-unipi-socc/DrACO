@@ -17,29 +17,24 @@
 
 package eu.seaclouds.platform.discoverer.core;
 
-
-import org.json.simple.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class OfferingTest {
-    static String offeringName = "Example with illegal characters : + -";
-
-    static String offeringJSON = "{" +
-            "\"offering_name\":\"Rackspace_Cloud_Servers_standard_512mb_LON\"," +
-            "\"last_crawl\":1447258085459," +
-            "\"type\":\"seaclouds.Nodes.Compute\"," +
-            "\"offering_id\":\"1370304911994607448\"" +
-            "}";
-
 
     @Test
-    public void testOfferingNameSanitization() {
-        String sanitizedName = Offering.sanitizeName(offeringName);
-        Assert.assertEquals(sanitizedName.indexOf(':'), -1);
-        Assert.assertEquals(sanitizedName.indexOf(' '), -1);
-        Assert.assertEquals(sanitizedName.indexOf('+'), -1);
-        Assert.assertEquals(sanitizedName.indexOf('-'), -1);
+    public void testOfferingToscaCreation() {
+        String ofId = "EC2";
+        Offering of = new Offering(ofId);
+        of.addProperty("num_cpus", "8");
+        of.addProperty("ram", "8");
+        of.addProperty("disk_size", "200");
+
+        Assert.assertEquals(of.getName(), ofId);
+        Assert.assertTrue(of.toTosca().contains("num_cpus: 8"));
+        Assert.assertTrue(of.toTosca().contains("ram: 8"));
+        Assert.assertTrue(of.toTosca().contains("disk_size: 200"));
+        Assert.assertFalse(of.toTosca().contains("num_cpus: 12"));
     }
 
 

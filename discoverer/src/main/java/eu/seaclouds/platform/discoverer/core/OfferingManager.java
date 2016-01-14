@@ -35,37 +35,33 @@ public class OfferingManager {
 
     private final MongoCollection<Document> offeringsCollection;
 
-    public HashMap<String, String> offeringNameToOfferingId =  new HashMap<>();
+    public ArrayList<String> offeringNames =  new ArrayList<>();
 
     public OfferingManager(MongoCollection<Document> collection) {
         this.offeringsCollection = collection;
     }
 
-    public String getOfferingId(String offeringName) {
-        return offeringNameToOfferingId.get(offeringName);
-    }
-
     /**
-     * Get the list of all offering ids
+     * Get the list of all offering name
      *
-     * @return the list of all offering ids
+     * @return the list of all offering names
      */
     public Collection<String> getAllOfferingIds() {
-        return offeringNameToOfferingId.values();
+        return offeringNames;
     }
 
     /**
      * Get an offering
      *
-     * @param offeringId the id of the offering
+     * @param offeringName the name of the offering
      * @return the offering identified by offeringId
      */
-    public Offering getOffering(String offeringId) {
+    public Offering getOffering(String offeringName) {
         /* input check */
-        if(offeringId == null)
+        if(offeringName == null)
             throw new NullPointerException("The parameter \"cloudOfferingId\" cannot be null.");
 
-        BasicDBObject query = new BasicDBObject("offering_id", offeringId);
+        BasicDBObject query = new BasicDBObject("offering_name", offeringName);
         FindIterable<Document> cursor = this.offeringsCollection.find(query);
 
         return Offering.fromDB(cursor.first());
@@ -78,23 +74,22 @@ public class OfferingManager {
      * @return the id of the added Offering
      */
     public String addOffering(Offering offering) {
-        // TODO: find a way to generate a unique ID (not used yet)
         this.offeringsCollection.insertOne(offering.toDBObject());
-        this.offeringNameToOfferingId.put(offering.getName(), offering.getId());
-        return offering.getId();
+        this.offeringNames.add(offering.getName());
+        return offering.getName();
     }
 
     /**
      * Remove an offering
      *
-     * @param offeringId the id of the offering to remove
+     * @param offeringName the name of the offering to remove
      * @return
      */
-    public boolean removeOffering(String offeringId) {
-        if(offeringId == null)
+    public boolean removeOffering(String offeringName) {
+        if(offeringName == null)
             throw new NullPointerException("The parameter \"cloudOfferingId\" cannot be null.");
 
-        BasicDBObject query = new BasicDBObject("offering_id", offeringId);
+        BasicDBObject query = new BasicDBObject("offering_name", offeringName);
         Document removedOffering = this.offeringsCollection.findOneAndDelete(query);
 
         return removedOffering != null;
@@ -108,7 +103,7 @@ public class OfferingManager {
         FindIterable<Document> offerings = this.offeringsCollection.find();
 
         for (Document d : offerings) {
-            offeringNameToOfferingId.put((String) d.get("offering_name"), (String) d.get("offering_id"));
+            offeringNames.add((String) d.get("offering_name"));
         }
     }
 

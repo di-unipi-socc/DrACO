@@ -20,11 +20,8 @@ package eu.seaclouds.platform.discoverer.core;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import eu.seaclouds.platform.discoverer.api.*;
 import eu.seaclouds.platform.discoverer.crawler.CloudHarmonySPECint;
 import eu.seaclouds.platform.discoverer.crawler.CrawlerManager;
-import io.dropwizard.Application;
-import io.dropwizard.setup.Environment;
 import org.bson.Document;
 
 import java.io.*;
@@ -33,9 +30,8 @@ import java.util.Collection;
 import java.util.Date;
 
 
-public class Discoverer extends Application<DiscovererConfiguration> {
+public class Discoverer {
     /* singleton */
-    private static final Discoverer singleInstance = new Discoverer();
     private ArrayList<String> offeringNodeTemplates = new ArrayList<>();
     private boolean refreshing = false;
     private ArrayList<String> activeCrawlers;
@@ -47,7 +43,21 @@ public class Discoverer extends Application<DiscovererConfiguration> {
     public int crawledTimes;
     public Date lastCrawl;
 
-    public static Discoverer instance() { return singleInstance; }
+    public Discoverer(MongoClient mongoClient, ArrayList<String> activeCrawlers) {
+        this.initializeResources();
+
+        MongoDatabase db = mongoClient.getDatabase(this.databaseName);
+        MongoCollection<Document> coll = db.getCollection(this.collectionName);
+
+        this.offeringManager = new OfferingManager(coll);
+        this.offeringManager.initializeOfferings();
+
+        this.activeCrawlers = activeCrawlers;
+    }
+
+    public Discoverer(MongoClient mongoClient) {
+        this(mongoClient, new ArrayList<String>());
+    }
 
     /* vars */
     public OfferingManager offeringManager;
@@ -69,7 +79,7 @@ public class Discoverer extends Application<DiscovererConfiguration> {
         Offering offering;
         try {
             offering = offeringManager.getOffering(cloudOfferingId);
-        } catch(Exception ex) {
+        } catch(NullPointerException ex) {
             ex.printStackTrace();
             offering = null;
         }
@@ -87,20 +97,20 @@ public class Discoverer extends Application<DiscovererConfiguration> {
         if (newOffering == null)
             return null;
 
-        String offeringId = offeringManager.getOfferingId(newOffering.getName());
+        String offeringName = newOffering.getName();
 
-        /* The offering was already present in the repository */
-        if (offeringId != null) {
-            offeringManager.removeOffering(offeringId);
+        /* if the offering was already present in the repository it is removed */
+        if (offeringManager.getOffering(offeringName) != null) {
+            offeringManager.removeOffering(offeringName);
         }
 
-        offeringId = offeringManager.addOffering(newOffering);
+        offeringManager.addOffering(newOffering);
 
         /* updates the list of all node templates */
         this.offeringNodeTemplates.add(newOffering.getNodeTemplate());
         totalCrawledOfferings++;
 
-        return offeringId;
+        return offeringName;
     }
 
     /**
@@ -136,7 +146,7 @@ public class Discoverer extends Application<DiscovererConfiguration> {
     public void refreshRepository() {
         if (this.getRefreshing() == false) {
             this.setRefreshing(true);
-            CrawlerManager cm = new CrawlerManager(this.activeCrawlers);
+            CrawlerManager cm = new CrawlerManager(this, this.activeCrawlers);
             new Thread(cm).start();
         }
     }
@@ -151,31 +161,6 @@ public class Discoverer extends Application<DiscovererConfiguration> {
         InputStream SPECintMap = this.getClass().getClassLoader().getResourceAsStream("SPECint_mapping");
         if (SPECintMap != null)
             CloudHarmonySPECint.initializeMap(SPECintMap);
-    }
-
-    @Override
-    public void run(DiscovererConfiguration configuration, Environment environment) {
-        this.initializeResources();
-
-        MongoClient mongoClient = new MongoClient(configuration.getDatabaseURL(), configuration.getDatabasePort());
-        MongoDatabase db = mongoClient.getDatabase(this.databaseName);
-        MongoCollection<Document> coll = db.getCollection(this.collectionName);
-
-        this.offeringManager = new OfferingManager(coll);
-        this.offeringManager.initializeOfferings();
-
-        this.activeCrawlers = configuration.getActiveCrawlers();
-
-        environment.jersey().register(new FetchAPI());          /* /fetchOffer */
-        environment.jersey().register(new FetchAllAPI());       /* /fetch_all */
-        environment.jersey().register(new DeleteAPI());         /* /delete */
-        environment.jersey().register(new StatisticsAPI());     /* /statistics */
-        environment.jersey().register(new RefreshAPI());        /* /refresh */
-        environment.jersey().register(new FetchIfAPI());
-    }
-
-    public static void main(String[] args) throws Exception {
-        Discoverer.instance().run(args);
     }
 }
 

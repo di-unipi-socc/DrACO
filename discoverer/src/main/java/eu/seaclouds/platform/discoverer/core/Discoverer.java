@@ -76,15 +76,10 @@ public class Discoverer {
      * @return The <code>Offering</code> object instance for the fetchOffer'ed ID.
      */
     public Offering fetchOffer(String cloudOfferingId) {
-        Offering offering;
-        try {
-            offering = offeringManager.getOffering(cloudOfferingId);
-        } catch(NullPointerException ex) {
-            ex.printStackTrace();
-            offering = null;
-        }
+        if (cloudOfferingId == null)
+            return null;
 
-        return offering;
+        return offeringManager.getOffering(cloudOfferingId);
     }
 
     /**

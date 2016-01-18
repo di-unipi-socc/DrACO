@@ -27,6 +27,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -51,6 +53,7 @@ public class CloudHarmonyCrawler extends SCCrawler {
     private Hashtable<String, String> strings;
     private DecimalFormat slaFormat = new DecimalFormat("0.00000");
     CloseableHttpClient httpclient;
+    static Logger log = LoggerFactory.getLogger(CloudHarmonyCrawler.class);
 
     public static String Name = "CloudHarmonyCrawler";
 
@@ -399,7 +402,7 @@ public class CloudHarmonyCrawler extends SCCrawler {
                 if (chService != null)
                     generateOfferings(chService);
             } catch(Exception ex) {
-                ex.printStackTrace();
+                log.warn(ex.getMessage());
             }
         }
     }
@@ -421,7 +424,7 @@ public class CloudHarmonyCrawler extends SCCrawler {
                 CloudHarmonyService chService = getService(serviceId, CloudTypes.PAAS);
                 generateOfferings(chService);
             } catch(Exception e) {
-                e.printStackTrace();
+                log.warn(e.getMessage());
             }
         }
     }

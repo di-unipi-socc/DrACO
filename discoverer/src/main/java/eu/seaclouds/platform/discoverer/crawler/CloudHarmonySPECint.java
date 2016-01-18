@@ -18,6 +18,9 @@
 
 package eu.seaclouds.platform.discoverer.crawler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +30,7 @@ import java.util.HashMap;
 public class CloudHarmonySPECint {
 
     private static HashMap<String, Integer> SPECint = new HashMap<>();
+    static Logger log = LoggerFactory.getLogger(CloudHarmonySPECint.class);
 
     public static void initializeMap(InputStream resource) {
         InputStreamReader isr = null;
@@ -43,12 +47,12 @@ public class CloudHarmonySPECint {
                     Integer value = Integer.parseInt(parts[1]);
                     SPECint.put(parts[0], value);
                 } catch (NumberFormatException e) {
-                    System.err.println("Cannot parse integer value " + parts[1]);
+                    log.error("Cannot parse integer value " + parts[1]);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            System.err.print("Cannot open location mapping file");
+            log.error("Cannot open location mapping file");
+            log.error(e.getMessage());
         } finally {
             try {
                 if (isr != null) {
@@ -60,7 +64,7 @@ public class CloudHarmonySPECint {
 
                 resource.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
     }

@@ -18,11 +18,15 @@
 package eu.seaclouds.platform.discoverer.crawler;
 
 import eu.seaclouds.platform.discoverer.core.Offering;
+import org.bson.json.JsonParseException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -40,6 +44,7 @@ public class PaasifyCrawler extends SCCrawler {
     private DecimalFormat slaFormat = new DecimalFormat("0.00000");
 
     private static HashMap<String, String> continentFullName;
+    static Logger log = LoggerFactory.getLogger(PaasifyCrawler.class);
 
     static {
         HashMap<String, String> initializedMap = new HashMap<>();
@@ -73,7 +78,7 @@ public class PaasifyCrawler extends SCCrawler {
                         .setDirectory(tempDirectory)
                         .call();
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
     }
@@ -90,8 +95,8 @@ public class PaasifyCrawler extends SCCrawler {
         try {
             updateLocalRepository();
             getOfferings();
-        } catch (Exception e){
-            e.printStackTrace();
+        } catch (GitAPIException e){
+            log.error(e.getMessage());
         }
     }
 
@@ -107,7 +112,8 @@ public class PaasifyCrawler extends SCCrawler {
         try {
             Git.open(new File(paasifyRepositoryDirecory)).pull().call();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Cannot update local Git repository");
+            log.error(e.getMessage());
         }
     }
 
@@ -132,8 +138,12 @@ public class PaasifyCrawler extends SCCrawler {
                     if (offering != null)
                         addOffering(offering);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (IOException ioe) {
+                log.error("IOException");
+                log.error(ioe.getMessage());
+            } catch (ParseException pe) {
+                log.error("ParseException");
+                log.error(pe.getMessage());
             }
         }
     }

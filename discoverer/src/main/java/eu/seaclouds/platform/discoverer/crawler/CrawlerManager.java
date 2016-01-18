@@ -72,12 +72,7 @@ public class CrawlerManager implements Runnable {
 
     @Override
     public void run() {
-        try {
-            this.crawl();
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            this.discoverer.setRefreshing(false);
-        }
+        this.crawl();
+        this.discoverer.setRefreshing(false);
     }
 }

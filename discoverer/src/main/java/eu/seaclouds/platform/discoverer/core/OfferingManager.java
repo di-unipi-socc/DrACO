@@ -51,10 +51,6 @@ public class OfferingManager {
      * @return the offering identified by offeringId
      */
     public Offering getOffering(String offeringName) {
-        /* input check */
-        if(offeringName == null)
-            throw new NullPointerException("The parameter \"cloudOfferingId\" cannot be null.");
-
         BasicDBObject query = new BasicDBObject("offering_name", offeringName);
         FindIterable<Document> cursor = this.offeringsCollection.find(query);
 

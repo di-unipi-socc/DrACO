@@ -48,19 +48,18 @@ public class FetchAllAPI {
             ids.add(offeringId);
         }
 
-        Offering offering = this.discoverer.fetchOffer("0");
+        Offering offering = this.discoverer.fetchOffer("all");
         String offeringTOSCA = "";
 
         if(offering != null) {
             offeringTOSCA = offering.toscaString;
         }
 
-        if (offeringTOSCA == null) {
+        if (offeringTOSCA.isEmpty()) {
             ids.clear();
-
         }
 
-        return new FetchAllRepresentation(new ArrayList<String>(), offeringTOSCA);
+        return new FetchAllRepresentation(ids, offeringTOSCA);
     }
 
     private class FetchAllRepresentation {

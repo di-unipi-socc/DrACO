@@ -18,12 +18,16 @@
 
 package eu.seaclouds.platform.discoverer.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.HashMap;
 
 public class LocationMapping {
 
     private static HashMap<String, String> map = new HashMap<>();
+    static Logger log = LoggerFactory.getLogger(LocationMapping.class);
 
     public static void initializeMap(InputStream resource) {
         InputStreamReader isr = null;
@@ -39,8 +43,8 @@ public class LocationMapping {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
-            System.err.print("Cannot open location mapping file");
+            log.error("Cannot open location mapping file");
+            log.error(e.getMessage());
         } finally {
             try {
                 if (isr != null) {
@@ -54,7 +58,7 @@ public class LocationMapping {
                     resource.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         }
     }

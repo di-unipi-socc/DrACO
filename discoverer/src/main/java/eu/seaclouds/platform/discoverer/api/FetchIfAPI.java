@@ -23,6 +23,8 @@ import eu.seaclouds.platform.discoverer.core.Offering;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -38,6 +40,7 @@ public class FetchIfAPI {
     /* vars */
     private Discoverer discoverer;
     private JSONParser JSONParser;
+    static Logger log = LoggerFactory.getLogger(FetchIfAPI.class);
 
     public FetchIfAPI(Discoverer discoverer) {
         this.discoverer = discoverer;
@@ -64,8 +67,8 @@ public class FetchIfAPI {
                 }
             }
         } catch (ParseException e) {
-            e.printStackTrace();
-            System.err.println("Cannot parse constraints");
+            log.error("Cannot parse constraints");
+            log.error(e.getMessage());
         }
 
         return new FetchIfRepresentation(validOfferingIds, validOfferings);

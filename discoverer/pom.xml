@@ -67,12 +67,14 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
+            <version>3.2.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.fakemongo</groupId>
             <artifactId>fongo</artifactId>
             <scope>test</scope>
+            <version>2.0.4</version>
         </dependency>
     </dependencies>
 

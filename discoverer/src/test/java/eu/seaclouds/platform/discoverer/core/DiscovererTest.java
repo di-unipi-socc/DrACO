@@ -18,8 +18,7 @@
 package eu.seaclouds.platform.discoverer.core;
 
 import com.github.fakemongo.Fongo;
-import eu.seaclouds.platform.discoverer.api.FetchAPI;
-import eu.seaclouds.platform.discoverer.api.FetchIfAPI;
+import eu.seaclouds.platform.discoverer.api.DiscovererAPI;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -69,7 +68,7 @@ public class DiscovererTest {
             d.addOffering(new Offering(name));
         }
 
-        ArrayList<String> offeringIds = (new FetchAPI(d)).getOfferingIds();
+        ArrayList<String> offeringIds = (new DiscovererAPI(d)).getOfferingIds();
         Assert.assertEquals(offeringIds.size(), offerings.size());
 
         for (String id: offeringIds) {
@@ -95,10 +94,10 @@ public class DiscovererTest {
         of.addProperty("num_cpus", "8");
         d.addOffering(of);
 
-        FetchIfAPI.FetchIfRepresentation fir = (new FetchIfAPI(d)).getOfferingsIf("{ \"num_cpus\": \"8\" }");
-        Assert.assertEquals(fir.getOfferingIds().size(), 1);
+        ArrayList<DiscovererAPI.OfferingRepresentation> offerings = (new DiscovererAPI(d)).getOfferingsIf("{ \"num_cpus\": \"8\" }");
+        Assert.assertEquals(offerings.size(), 1);
 
-        String fetchedOffering = fir.getOfferings().get(0);
+        String fetchedOffering = offerings.get(0).getOffering();
         Assert.assertEquals(fetchedOffering, of.toTosca());
 
     }

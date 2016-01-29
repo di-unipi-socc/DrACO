@@ -126,7 +126,7 @@ public class DiscovererAPI {
     @GET
     @Path("/fetchif")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<OfferingRepresentation> getOfferingsIf(@QueryParam("constraints") String constraints)
+    public ArrayList<OfferingRepresentation> getOfferingsIf(@QueryParam("constraints") String constraints, @QueryParam("provider") String provider)
             throws IOException {
 
         ArrayList<OfferingRepresentation> offerings = new ArrayList<>();
@@ -141,7 +141,7 @@ public class DiscovererAPI {
 
             for (String offeringId : offeringIds) {
                 Offering offering = this.discoverer.fetchOffer(offeringId);
-                if (this.satisfyAllConstraints(constraintsObject, offering)) {
+                if (this.satisfyAllConstraints(constraintsObject, provider, offering)) {
                     offerings.add(new OfferingRepresentation(offeringId, offering.toTosca()));
                 }
             }
@@ -213,9 +213,13 @@ public class DiscovererAPI {
         }
     }
 
-    private boolean satisfyAllConstraints(JSONObject constraintsObject, Offering offering) {
+    private boolean satisfyAllConstraints(JSONObject constraintsObject, String provider, Offering offering) {
         String toscaString = offering.toTosca();
         Set keys = constraintsObject.keySet();
+
+        /* if the provider is specified, but it is not the one of this offerings, it does not satisfy all the constraints */
+        if (provider != null && !hasProvider(toscaString, provider))
+            return false;
 
         for (Object key : keys) {
             String constraintName = (String) key;
@@ -227,6 +231,17 @@ public class DiscovererAPI {
         }
 
         return true;
+    }
+
+    private boolean hasProvider(String toscaString, String expectedProvider) {
+        String pre = "type: seaclouds.nodes.";
+        int i = toscaString.indexOf(pre) + pre.length();
+        while (toscaString.charAt(i++) != '.');
+        toscaString = toscaString.substring(i);
+
+        String actualProvider = toscaString.split(System.getProperty("line.separator"))[0];
+
+        return actualProvider.equals(expectedProvider);
     }
 
     private boolean satisfyConstraint(String constraintName, String constraintOperator, JSONArray constraintValue, String toscaString) {

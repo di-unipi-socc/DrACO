@@ -87,18 +87,29 @@ public class DiscovererTest {
         offeringNames.add("Openshift");
 
         for (String name: offeringNames) {
-            d.addOffering(new Offering(name));
+            Offering of = new Offering(name);
+            of.setType("seaclouds.nodes.Compute." + name);
+            d.addOffering(of);
         }
 
         Offering of = new Offering("Example");
+        of.setType("seaclouds.nodes.Compute.Example");
         of.addProperty("num_cpus", "8");
         d.addOffering(of);
 
-        ArrayList<DiscovererAPI.OfferingRepresentation> offerings = (new DiscovererAPI(d)).getOfferingsIf("{ \"num_cpus\": [\"=\", \"8\"] }");
+        ArrayList<DiscovererAPI.OfferingRepresentation> offerings = (new DiscovererAPI(d)).getOfferingsIf("{ \"num_cpus\": [\"=\", \"8\"] }", null);
         Assert.assertEquals(offerings.size(), 1);
 
         String fetchedOffering = offerings.get(0).getOffering();
         Assert.assertEquals(fetchedOffering, of.toTosca());
 
+        offerings = (new DiscovererAPI(d)).getOfferingsIf("{ \"num_cpus\": [\"=\", \"8\"] }", "Example");
+        Assert.assertEquals(offerings.size(), 1);
+
+        fetchedOffering = offerings.get(0).getOffering();
+        Assert.assertEquals(fetchedOffering, of.toTosca());
+
+        offerings = (new DiscovererAPI(d)).getOfferingsIf("{}", "Not present provider");
+        Assert.assertEquals(offerings.size(), 0);
     }
 }

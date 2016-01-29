@@ -94,7 +94,7 @@ public class DiscovererTest {
         of.addProperty("num_cpus", "8");
         d.addOffering(of);
 
-        ArrayList<DiscovererAPI.OfferingRepresentation> offerings = (new DiscovererAPI(d)).getOfferingsIf("{ \"num_cpus\": \"8\" }");
+        ArrayList<DiscovererAPI.OfferingRepresentation> offerings = (new DiscovererAPI(d)).getOfferingsIf("{ \"num_cpus\": [\"=\", \"8\"] }");
         Assert.assertEquals(offerings.size(), 1);
 
         String fetchedOffering = offerings.get(0).getOffering();

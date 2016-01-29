@@ -20,6 +20,7 @@ package eu.seaclouds.platform.discoverer.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.seaclouds.platform.discoverer.core.Discoverer;
 import eu.seaclouds.platform.discoverer.core.Offering;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -135,6 +136,8 @@ public class DiscovererAPI {
         try {
             constraintsObject = (JSONObject) JSONParser.parse(constraints);
             Collection<String> offeringIds = discoverer.getAllOfferingIds();
+            /* removing the special offer containing all offerings */
+            offeringIds.remove("all");
 
             for (String offeringId : offeringIds) {
                 Offering offering = this.discoverer.fetchOffer(offeringId);
@@ -216,18 +219,23 @@ public class DiscovererAPI {
 
         for (Object key : keys) {
             String constraintName = (String) key;
-            String constraintValue = (String) constraintsObject.get(key);
+            JSONArray constraintOperatorAndValue = (JSONArray) constraintsObject.get(key);
+            String constraintOperator = (String) constraintOperatorAndValue.get(0);
 
-            if (!satisfyConstraint(constraintName, constraintValue, toscaString))
+            if (!satisfyConstraint(constraintName, constraintOperator, constraintOperatorAndValue, toscaString))
                 return false;
         }
 
         return true;
     }
 
-    private boolean satisfyConstraint(String constraintName, String constraintValue, String toscaString) {
+    private boolean satisfyConstraint(String constraintName, String constraintOperator, JSONArray constraintValue, String toscaString) {
+        /* look for properties inside tosca string */
+        toscaString = toscaString.substring(toscaString.indexOf("properties:") + "properties:".length());
+        /* look for specified property */
         int i = toscaString.indexOf(constraintName);
 
+        /* property is not present, constraint is not satisfied */
         if (i == -1) {
             return false;
         }
@@ -235,8 +243,40 @@ public class DiscovererAPI {
         i += constraintName.length();
         while (toscaString.charAt(i++) != ':');
         if (toscaString.charAt(i) == ' ') i++;
+        toscaString = toscaString.substring(i);
 
-        return toscaString.substring(i).startsWith(constraintValue);
+        String actualValue = toscaString.split(System.getProperty("line.separator"))[0];
+
+        if (constraintOperator.equals("in")) {
+            return inOperator(actualValue, constraintValue);
+        } else {
+            String expectedValue = (String) constraintValue.get(1);
+            return numberOperator(constraintOperator, Float.parseFloat(actualValue), Float.parseFloat(expectedValue));
+        }
+    }
+
+    private boolean inOperator(String actualValue, JSONArray expectedValues) {
+        for (int i = 1; i < expectedValues.size(); i++){
+            String value = (String) expectedValues.get(i);
+            if (value.equals(actualValue))
+                return true;
+        }
+
+        return false;
+    }
+
+    private boolean numberOperator(String constraintOperator, Float actualValue, Float expectedValue) {
+        switch (constraintOperator)
+        {
+            case ">":
+                return actualValue > expectedValue;
+            case "<":
+                return actualValue < expectedValue;
+            case "=":
+                return actualValue.equals(expectedValue);
+            default:
+                return false;
+        }
     }
 
     private class StatisticsRepresentation {

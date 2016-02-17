@@ -1,0 +1,166 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+metadata:
+  template_author: >
+    Jacopo Soldani 
+    Department of Computer Science
+    University of Pisa
+  template_version: 1.0
+  
+description: >
+  This document defines a set of types that permits defining
+  an IaaS or PaaS offering in TOSCA.
+
+imports:
+  - tosca-normative-types: 1.0
+
+capability_types:
+  draco.capabilities.Container:
+    derived_from: tosca.capabilities.Container
+    version: 1.0
+    description: >
+      This capability type is an extension of the normative 
+      capability type "Container". It permits detailing the hosting
+      capabilities of an offering (by specifying also the SPECint 
+      benchmarking value of the offered CPU, and the type and 
+      quantity of the offered disks).
+    properties:
+      cpu_SPECint:
+        type: integer
+        required: false
+        constraints: 
+          - greater_or_equal: 1
+      disk_type:
+        type: string
+        required: false
+        constraints:
+          - valid_values: [ 'sata', 'sas', 'ssd', 'scsi', 'pcie' ]
+      num_disks:
+        type: integer
+        required: false
+        constraints: 
+          - greater_or_equal: 1
+    
+  draco.capabilities.Hosting:
+    derived_from: tosca.capabilities.Container
+    version: 1.0
+    description: >
+      This capability type permits specifying the hosting capabilities of 
+      a cloud offering. Namely, it permits describing whether an offering
+      supports private/public hosting, and listing which are the software 
+      distributions (and versions) it supports.
+      Notice that it is an extension of "draco.capabilities.Container", 
+      thus also permitting to detail offered CPUs, memory, and disks.
+    properties:
+      private_hosting:
+        type: boolean
+        default: false
+      public_hosting: 
+        type: boolean
+        default: false
+      software_support:
+        type: map
+        required: true
+        entry_schema: list
+      datastore_support:
+        type: map
+        required: true
+        entry_schema: list
+  
+  draco.capabilities.Scalable:
+    derived_from: tosca.capabilities.Scalable
+    version: 1.0
+    description: >
+      This capability type is an extension of the normative
+      capability type "Scalable". It permits specifying whether a
+      node supports auto-scaling, horizontal scaling, or vertical
+      scaling.
+    properties:
+      auto:
+        type: boolean
+        default: false
+      horizontal:
+        type: boolean
+        default: false
+      vertical:
+        type: boolean
+        default: false
+          
+node_types:
+  draco.nodes.IaaS:
+    derived_from: tosca.nodes.Compute
+    version: 1.0
+    description: >
+      This node type extends the normative node type "Compute", and 
+      permits detailing the features of an IaaS offering.
+    properties: 
+      hardware_id: 
+        type: string
+        required: false
+      region:
+        type: string
+        required: false
+      service_name:
+        type: string
+        required: false
+    capabilities:
+      host:
+        type: draco.capabilities.Container
+  
+  draco.nodes.PaaS:
+    derived_from: tosca.nodes.Compute
+    version: 1.0
+    description: >
+      This node type extends the normative node type "Compute", and 
+      permits detailing the features of a PaaS offering.
+    capabilities: 
+      host:
+        type: draco.capabilities.Hosting
+      scalable:
+        type: draco.capabilities.Scalable
+      
+policy_types:
+  draco.policies.Availability:
+    derived_from: tosca.policies.Performance
+    version: 1.0
+    description: >
+      This policy type extends the normative policy type "Performance",
+      and permits specifying the uptime percentage of a cloud offering.
+    properties:
+      uptime_percentage:
+        type: float
+        required: false
+        constraints:
+          - in_range: [ 0, 1 ]
+    targets: [ draco.nodes.IaaS, draco.nodes.PaaS ]
+          
+  draco.policies.Location:
+    derived_from: tosca.policies.Placement
+    version: 1.0
+    description: >
+      This policy type permits describing the geographical location
+      (i.e., city, country, continent) of a cloud offering. It does
+      so by properly extending the normative policy type "Placement".
+    properties: 
+      city: 
+        type: string
+        required: false
+      country: 
+        type: string
+        required: false
+      continent: 
+        type: string
+        required: false
+    targets: [ draco.nodes.IaaS, draco.nodes.PaaS ]
+  
+  draco.policies.Pricing:
+    derived_from: tosca.policies.Root
+    version: 1.0
+    description: >
+      This policy type extends the normative policy type "Root",
+      and permits specifying pricing of a cloud offering.
+    properties:
+      cost:
+        type: string
+        required: true
+    targets: [ draco.nodes.IaaS, draco.nodes.PaaS ]

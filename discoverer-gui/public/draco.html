@@ -5,17 +5,26 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <script type="text/javascript" src="script/lib/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="script/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="script/lib/js-yaml.min.js"></script>
     <script type="text/javascript" src="script/draco/providerMap.js"></script>
     <script type="text/javascript" src="script/draco/draco.js"> </script>
+    <script type="text/javascript" src="script/draco/dracoify.js"> </script>
 </head>
 <body onload="loadProviders();">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="http://www.seaclouds-project.eu/">SeaClouds</a>
+                <a class="navbar-brand">DrACO</a>
             </div>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="https://raw.githubusercontent.com/jacopogiallo/DrACO/master/definitions/draco-types.tosca" target="_blank">draco-types.tosca</a></li>
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">See also<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a  href="http://www.seaclouds-project.eu/" target="_blank">SeaClouds</a></li>
+                        <li class="divider"></li>
+                        <li><a href="definitions/draco-types.tosca" target="_blank">draco-types.tosca</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>

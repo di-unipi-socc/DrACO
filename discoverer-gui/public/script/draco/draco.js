@@ -229,7 +229,7 @@ function find() {
                 // Creating hashmap of results ("offering_id"->"offering")
                 if (!$.isArray(results)) results = [results];
                 $.each(results, function (kk, result) {
-                    offerings[result.offering_id] = result.offering;
+                    offerings[result.offering_id] = dracoify(result.offering);
                 });
 
                 // Creating selector for query results

@@ -24,8 +24,15 @@ function dracoify(yamlString) {
     if (node.properties.resource_type) delete node.properties.resource_type;
     
     // Renaming properties
-    move(node.properties, "hardwareId", node.properties, "hardware_id");
     move(node.properties, "location", node.properties, "service_name");
+    if (node.properties.hardwareId) {
+        node.properties.service_name += ":" + node.properties.hardwareId;
+        delete node.properties.hardwareId;
+    }
+    if (node.properties.region) {
+        node.properties.service_name += ":" + node.properties.region;
+        delete node.properties.region;
+    }
 
     // IaaS offering
     if((node.type.indexOf("Compute") > -1)) {

@@ -39,7 +39,7 @@ function dracoify(yamlString) {
         move(node.properties, "disk_type", capContainerProperties, "disk_type");
         move(node.properties, "num_disks", capContainerProperties, "num_disks");
         // Adding "host" capability to IaaS offering
-        if(capContainerProperties.size > 0) {
+        if(Object.keys(capContainerProperties).length > 0) {
             if (!node.capabilities) node["capabilities"] = {};
             node.capabilities["host"] = createCapability(capContainerProperties);
         }
@@ -99,6 +99,7 @@ function dracoify(yamlString) {
     // Creating "availability" policy
     if(Object.keys(node.properties).indexOf("availability") > -1) {
         var avaPolPropList = {};
+        node.properties.availability = node.properties.availability * 100;
         move(node.properties, "availability", avaPolPropList, "uptime_percentage");
         policies.push(createPolicy("availability", "draco.policies.Availability", avaPolPropList, nodeName));
     }

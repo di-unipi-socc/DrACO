@@ -179,6 +179,7 @@ function find() {
         var key = input.value;
         var operator = input.nextSibling.value;
         var value = input.nextSibling.nextSibling.value;
+        if (key == 'availability') value = (value / 100).toString();
         if (value != '') filter[key] = [operator, value];
     });
 

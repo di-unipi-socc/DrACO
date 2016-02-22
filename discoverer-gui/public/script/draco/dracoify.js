@@ -16,6 +16,10 @@ function dracoify(yamlString) {
     var nodeName = Object.keys(yaml.topology_template.node_templates)[0];
     var node = yaml.topology_template.node_templates[nodeName];
 
+    // Fixing description and template name
+    yaml.template_name = "cloud_offering_" + nodeName;
+    yaml.description = "A discovered cloud offering.";
+
     // Removing "resource_type" property
     if (node.properties.resource_type) delete node.properties.resource_type;
     

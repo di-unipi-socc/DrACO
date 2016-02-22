@@ -133,7 +133,8 @@ function dracoify(yamlString) {
  */
 function move(sourceObj, sourceKey, targetObj, targetKey) {
     if (Object.keys(sourceObj).indexOf(sourceKey) > -1) {
-        targetObj[targetKey] = sourceObj[sourceKey]
+        targetObj[targetKey] = sourceObj[sourceKey];
+        if (isNaN(targetObj[targetKey])) targetObj[targetKey] = targetObj[targetKey].toLowerCase();
         delete sourceObj[sourceKey];
     }
 }

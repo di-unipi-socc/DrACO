@@ -20,8 +20,10 @@ function dracoify(yamlString) {
     yaml.template_name = "cloud_offering_" + nodeName;
     yaml.description = "A discovered cloud offering.";
 
-    // Removing "resource_type" property
+    // Fixing node type
     if (node.properties.resource_type) delete node.properties.resource_type;
+    if (node.type.indexOf("Compute") > -1) node.type = "draco.nodes.IaaS";
+    if (node.type.indexOf("Platform") > -1) node.type = "draco.nodes.PaaS";
     
     // Renaming properties
     move(node.properties, "location", node.properties, "service_name");

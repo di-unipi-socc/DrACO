@@ -184,7 +184,7 @@ function createCapability(capabilityProperties) {
 function createPolicy(policyName, policyType, policyPropertyList, targetNode) {
     // Creating policy description (i.e., properties, type, targets)
     var policyFeatures = {};
-    policyFeatures["type"] = "draco.policies.Availability";
+    policyFeatures["type"] = policyType;
     policyFeatures["properties"] = policyPropertyList;
     var targets = [];
     targets.push(targetNode);

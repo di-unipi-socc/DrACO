@@ -14,6 +14,7 @@ var properties = {
 // Software support (to specify filters)
 var sw = {
     java_support: "Java",
+    scala_support: "Scala",
     go_support: "Go",
     node_support: "NodeJS",
     php_support: "PHP",

@@ -41,7 +41,9 @@ function dracoify(yamlString) {
         // Creating "host" capability
         var capContainerProperties = {};
         move(node.properties, "num_cpus", capContainerProperties, "num_cpus");
+        node.properties.disk_size = node.properties.disk_size + " GB";
         move(node.properties, "disk_size", capContainerProperties, "disk_size");
+        node.properties.ram = node.properties.ram + " GB";
         move(node.properties, "ram", capContainerProperties, "mem_size");
         move(node.properties, "performance", capContainerProperties, "cpu_SPECint");
         move(node.properties, "disk_type", capContainerProperties, "disk_type");
@@ -74,6 +76,7 @@ function dracoify(yamlString) {
         moveSupport(node.properties, "php", capHostingSWSupportProperty, "php");
         moveSupport(node.properties, "python", capHostingSWSupportProperty, "python");
         moveSupport(node.properties, "ruby", capHostingSWSupportProperty, "ruby");
+        moveSupport(node.properties, "scala", capHostingSWSupportProperty, "scala");
         moveSupport(node.properties, "tomcat", capHostingSWSupportProperty, "tomcat");
         if (Object.keys(capHostingSWSupportProperty).length > 0)
             capHostingProperties["software_support"] = capHostingSWSupportProperty;
@@ -128,6 +131,7 @@ function dracoify(yamlString) {
     // Creating "pricing" policy
     if (Object.keys(node.properties).indexOf("cost") > -1) {
         var pricePolPropList = {};
+        node.properties.cost = node.properties.cost + " eur/h";
         move(node.properties, "cost", pricePolPropList, "cost");
         policies.push(createPolicy("pricing", "draco.policies.Pricing", pricePolPropList, nodeName));
     }

@@ -114,11 +114,17 @@ function addSoftwareSupport() {
     innerSS.className = 'col-lg-10';
     outerSS.appendChild(innerSS);
 
+    // Creating label
+    var labelSS = document.createElement('span')
+    labelSS.innerHTML = "Support for:&nbsp;";
+    labelSS.style = 'margin-top: 7px; float: left; min-width: 5%; display: inline';
+    innerSS.appendChild(labelSS);
+
     // Creating selector
     var selectSS = document.createElement('select');
     selectSS.className = 'form-control sea-ss-key';
     selectSS.type = 'text';
-    selectSS.style = 'width: 90%';
+    selectSS.style = 'width: 50%; float:left; display: inline';
     innerSS.appendChild(selectSS);
 
     // Creating selector items

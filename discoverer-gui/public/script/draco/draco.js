@@ -272,7 +272,7 @@ function find() {
             }
         },
         error: function (jqXHR, status) {
-            $('#query-response')[0].innerHTML = "ERROR: SeaClouds Discoverer cannot be reached at the specified URL (see below).";
+            $('#query-response')[0].innerHTML = "ERROR: DrACO REST API is currently unreachable.";
         }
     });
 }

@@ -6,5 +6,5 @@ server:
    type: http
    port: 1236
 activeCrawlers: ["CloudHarmonyCrawler", "PaasifyCrawler"]
-databaseURL: "seaclouds.di.unipi.it"
+databaseURL: "localhost"
 databasePort: 27017

@@ -1,5 +1,5 @@
 //Placeholder: URL Discoverer
-var dracoURL = 'http://52.49.115.206:1236/discoverer/fetchif?' // 'http://seaclouds.di.unipi.it:1236/discoverer/fetchif?' 
+var dracoURL = 'http://seaclouds.di.unipi.it:1236/discoverer/fetchif?'; // 'http://52.49.115.206:1236/discoverer/fetchif?'
 
 // Offering properties (to specify filters)
 var properties = {

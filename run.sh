@@ -45,7 +45,7 @@ echo ""
 
 # Waiting the user to send "exit" command
 echo "******************************"
-echo "*  DrACO is up and running!  ex*"
+echo "*  DrACO is up and running!  *"
 echo "******************************"
 EXIT="aa"
 while [ $EXIT != "exit" ]; do

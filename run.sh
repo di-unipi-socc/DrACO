@@ -36,8 +36,16 @@ REST_API_PID=$!
 echo "-> DONE! (PID=$REST_API_PID)"
 echo ""
 
+# Configuring nodejs server
+echo "Configuring nodejs server"
+cd discoverer-gui
+npm install 1>../log/npm-install.log 2>../log/npm-install-error.log
+cd ..
+echo "-> DONE!"
+echo ""
+
 # Starting nodejs server
-echo "Starting gui nodejs server"
+echo "Starting gui on nodejs server"
 nodejs discoverer-gui/index.js 1>log/gui.log 2>log/gui-error.log &
 NODEJS_PID=$!
 echo "-> DONE! (PID=$NODEJS_PID)"

@@ -15,4 +15,5 @@ release.properties
 pom.xml.*
 .DS_Store
 *~
+.*~
 discoverer-gui/node_modules/

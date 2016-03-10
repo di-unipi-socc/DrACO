@@ -94,12 +94,6 @@ node_types:
       This node type extends the normative node type "Compute", and 
       permits detailing the features of an IaaS offering.
     properties: 
-      hardware_id: 
-        type: string
-        required: false
-      region:
-        type: string
-        required: false
       service_name:
         type: string
         required: false

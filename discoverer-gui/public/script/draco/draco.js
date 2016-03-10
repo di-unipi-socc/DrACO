@@ -1,5 +1,5 @@
 //Placeholder: URL Discoverer
-var dracoURL = 'http://52.49.115.206:1236/discoverer/fetchif?' // 'http://seaclouds.di.unipi.it:1236/discoverer/fetchif?' 
+var dracoURL = 'http://seaclouds.di.unipi.it:1236/discoverer/fetchif?'; // 'http://52.49.115.206:1236/discoverer/fetchif?'
 
 // Offering properties (to specify filters)
 var properties = {
@@ -14,6 +14,7 @@ var properties = {
 // Software support (to specify filters)
 var sw = {
     java_support: "Java",
+    scala_support: "Scala",
     go_support: "Go",
     node_support: "NodeJS",
     php_support: "PHP",
@@ -113,11 +114,17 @@ function addSoftwareSupport() {
     innerSS.className = 'col-lg-10';
     outerSS.appendChild(innerSS);
 
+    // Creating label
+    var labelSS = document.createElement('span')
+    labelSS.innerHTML = "Support for:&nbsp;";
+    labelSS.style = 'margin-top: 7px; float: left; min-width: 5%; display: inline';
+    innerSS.appendChild(labelSS);
+
     // Creating selector
     var selectSS = document.createElement('select');
     selectSS.className = 'form-control sea-ss-key';
     selectSS.type = 'text';
-    selectSS.style = 'width: 90%';
+    selectSS.style = 'width: 50%; float:left; display: inline';
     innerSS.appendChild(selectSS);
 
     // Creating selector items
@@ -179,6 +186,7 @@ function find() {
         var key = input.value;
         var operator = input.nextSibling.value;
         var value = input.nextSibling.nextSibling.value;
+        if (key == 'availability') value = (value / 100).toString();
         if (value != '') filter[key] = [operator, value];
     });
 
@@ -229,7 +237,7 @@ function find() {
                 // Creating hashmap of results ("offering_id"->"offering")
                 if (!$.isArray(results)) results = [results];
                 $.each(results, function (kk, result) {
-                    offerings[result.offering_id] = result.offering;
+                    offerings[result.offering_id] = dracoify(result.offering);
                 });
 
                 // Creating selector for query results
@@ -264,7 +272,7 @@ function find() {
             }
         },
         error: function (jqXHR, status) {
-            $('#query-response')[0].innerHTML = "ERROR: SeaClouds Discoverer cannot be reached at the specified URL (see below).";
+            $('#query-response')[0].innerHTML = "ERROR: DrACO REST API is currently unreachable.";
         }
     });
 }

@@ -3,7 +3,7 @@ function dracoify(yamlString) {
 
     //Fixing TOSCA imports
     //TODO placeholder for draco-types publishing URL
-    yaml.imports.push("draco-types:raw.githubusercontent.com/jacopogiallo/DrACO/master/definitions/draco-types.tosca");
+    yaml.imports.push("draco-types:seaclouds.di.unipi.it/definitions/draco-types.tosca");
     var imports = yaml.imports;
     yaml.imports = [];
     $.each(imports, function (index, imp) {

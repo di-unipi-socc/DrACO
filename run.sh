@@ -46,7 +46,7 @@ echo ""
 
 # Starting nodejs server
 echo "Starting gui on nodejs server"
-nodejs discoverer-gui/index.js 1>log/gui.log 2>log/gui-error.log &
+node discoverer-gui/index.js 1>log/gui.log 2>log/gui-error.log &
 NODEJS_PID=$!
 echo "-> DONE! (PID=$NODEJS_PID)"
 echo ""

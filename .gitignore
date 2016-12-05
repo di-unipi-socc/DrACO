@@ -17,3 +17,4 @@ pom.xml.*
 *~
 .*~
 discoverer-gui/node_modules/
+draco.pids.temp

@@ -25,4 +25,6 @@ The DrACO discoverer can be automatically installed on Unix machines, provided t
 If this is the case, to install and start the DrACO discoverer just proceed as follows:
  1. Open a bash shell, 
  2. move to the folder where DrACO has been downloaded, and 
- 3. type `sudo ./run.sh`.
+ 3. type `sudo ./start.sh`.
+
+Once DrACO is running, to stop it just type `sudo ./stop.sh`.

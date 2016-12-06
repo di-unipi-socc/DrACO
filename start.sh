@@ -35,7 +35,7 @@ java -jar discoverer/target/discoverer-0.8.0-SNAPSHOT.jar server discoverer/disc
 REST_API_PID=$!
 echo "-> DONE! (PID=$REST_API_PID)"
 echo ""
-echo $REST_API_PID >> draco.pids.temp
+echo $REST_API_PID > draco.pids.temp
 
 # Configuring nodejs server
 echo "Configuring nodejs server"

@@ -16,7 +16,7 @@ while read -r line
 do
   pid="$line"
   echo "Killing process $pid.." 
-  kill $pid
+  kill $pid 1>log/stop.log 2>log/stop-error.log
   echo "-> DONE"
 done < "draco.pids.temp"
 

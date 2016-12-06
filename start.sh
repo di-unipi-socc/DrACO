@@ -53,7 +53,7 @@ echo "-> DONE! (PID=$NODEJS_PID)"
 echo ""
 echo $NODEJS_PID >> draco.pids.temp
 
-# Waiting the user to send "exit" command
+# Printing result message
 echo "******************************"
 echo "*  DrACO is up and running!  *"
 echo "******************************"
